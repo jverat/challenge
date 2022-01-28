@@ -17,97 +17,56 @@ export class GildedRose {
         this.items = items;
     }
 
-    updateQualityNew() {
+    updateQuality() {
         this.items = this.items.map(item => {
             switch (item.name) {
-                case 'Aged Brie': {
-                    if      (item.quality >= 50) item.quality = 50
-                    else if (item.sellIn > 0)    item.quality++
-                    else                         item.quality += 2
-
-                    item.sellIn--
-                    break
-                }
-                case 'Backstage passes to a TAFKAL80ETC concert': {
-                    if      (item.quality >= 50 && item.sellIn != 0) item.quality = 50
-                    else if (item.sellIn == 0)                       item.quality = 0
-                    else if (item.sellIn <= 5)                       item.quality += 3
-                    else if (item.sellIn <= 10)                      item.quality += 2
-                    else                                             item.quality++
-
-                    item.sellIn--
-                    break
-                }
-                case 'Conjured': {
-                    if      (item.sellIn <= 0 && item.quality >= 4) item.quality -= 4
-                    else if ( item.quality >= 2)                    item.quality -= 2
-                    else                                            item.quality = 0
-
-                    item.sellIn--
-                    break
-                }
+                case 'Aged Brie':                                 item = GildedRose.updateBrie(item); break;
+                case 'Backstage passes to a TAFKAL80ETC concert': item = GildedRose.updateBackstagePass(item); break;
+                case 'Conjured':                                  item = GildedRose.updateConjured(item); break;
                 case 'Sulfuras, Hand of Ragnaros': break
-                default: {
-                    if      (item.sellIn <= 0 && item.quality >= 2) item.quality-=2
-                    else if (item.quality >= 1)                     item.quality-=1
-                    else                                            item.quality = 0
-
-                    item.sellIn--
-                }
+                default: item = GildedRose.updateItem(item)
             }
             return item
         })
-
         return this.items
     }
 
-    updateQuality() {
-        for (let i = 0; i < this.items.length; i++) {
-            if (this.items[i].name != 'Aged Brie' && this.items[i].name != 'Backstage passes to a TAFKAL80ETC concert') {
-                if (this.items[i].quality > 0) {
-                    if (this.items[i].name != 'Sulfuras, Hand of Ragnaros') {
-                        this.items[i].quality = this.items[i].quality - 1
-                    }
-                }
-            } else {
-                if (this.items[i].quality < 50) {
-                    this.items[i].quality = this.items[i].quality + 1
-                    if (this.items[i].name == 'Backstage passes to a TAFKAL80ETC concert') {
-                        if (this.items[i].sellIn < 11) {
-                            if (this.items[i].quality < 50) {
-                                this.items[i].quality = this.items[i].quality + 1
-                            }
-                        }
-                        if (this.items[i].sellIn < 6) {
-                            if (this.items[i].quality < 50) {
-                                this.items[i].quality = this.items[i].quality + 1
-                            }
-                        }
-                    }
-                }
-            }
-            if (this.items[i].name != 'Sulfuras, Hand of Ragnaros') {
-                this.items[i].sellIn = this.items[i].sellIn - 1;
-            }
-            if (this.items[i].sellIn < 0) {
-                if (this.items[i].name != 'Aged Brie') {
-                    if (this.items[i].name != 'Backstage passes to a TAFKAL80ETC concert') {
-                        if (this.items[i].quality > 0) {
-                            if (this.items[i].name != 'Sulfuras, Hand of Ragnaros') {
-                                this.items[i].quality = this.items[i].quality - 1
-                            }
-                        }
-                    } else {
-                        this.items[i].quality = this.items[i].quality - this.items[i].quality
-                    }
-                } else {
-                    if (this.items[i].quality < 50) {
-                        this.items[i].quality = this.items[i].quality + 1
-                    }
-                }
-            }
-        }
+    static updateBrie(item: Item): Item {
+        if      (item.quality >= 50) item.quality = 50
+        else if (item.sellIn > 0)    item.quality++
+        else                         item.quality += 2
 
-        return this.items;
+        item.sellIn--
+        return item
+    }
+
+    static updateBackstagePass(item: Item): Item {
+        if      (item.quality >= 50 && item.sellIn != 0) item.quality = 50
+        else if (item.sellIn == 0)                       item.quality = 0
+        else if (item.sellIn <= 5)                       item.quality += 3
+        else if (item.sellIn <= 10)                      item.quality += 2
+        else                                             item.quality++
+
+        item.sellIn--
+        return item
+    }
+
+    static updateConjured(item: Item): Item {
+        if      (item.sellIn <= 0 && item.quality >= 4) item.quality -= 4
+        else if ( item.quality >= 2)                    item.quality -= 2
+        else                                            item.quality = 0
+
+        item.sellIn--
+        return item
+    }
+
+    static updateItem(item: Item): Item {
+        if      (item.sellIn <= 0 && item.quality >= 2) item.quality-=2
+        else if (item.quality >= 1)                     item.quality-=1
+        else                                            item.quality = 0
+
+        item.sellIn--
+        return item
     }
 }
+
